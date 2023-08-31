@@ -16,7 +16,8 @@ class Channel:
 		self.__channel_id = channel_id
 
 		# получаем данные канала
-		self.channel_data = self.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+		self.channel_data = self.get_service().channels().list(id=self.__channel_id,
+															   part='snippet,statistics').execute()
 
 		# сохраняем в файл
 		self.json_data = json.dumps(self.channel_data, indent=2, ensure_ascii=False)
@@ -38,6 +39,38 @@ class Channel:
 
 		# общее количество просмотров
 		self.count_views = json.loads(self.json_data)["items"][0]["statistics"]["viewCount"]
+
+	def __str__(self):
+		"""Возвращает название канала"""
+		return f'{self.title} ({self.url})'
+
+	def __add__(self, other):
+		"""Сложение каналов"""
+		return int(self.count_subscribers) + int(other.count_subscribers)
+
+	def __sub__(self, other):
+		"""Вычитание каналов"""
+		return int(self.count_subscribers) - int(other.count_subscribers)
+
+	def __rsub__(self, other):
+		"""Вычитание каналов"""
+		return other.count_subscribers - self.count_subscribers
+
+	def __gt__(self, other):
+		"""Сравнение каналов"""
+		return self.count_subscribers > other.count_subscribers
+
+	def __ge__(self, other):
+		"""Сравнение каналов"""
+		return self.count_subscribers >= other.count_subscribers
+
+	def __lt__(self, other):
+		"""Сравнение каналов"""
+		return self.count_subscribers < other.count_subscribers
+
+	def __le__(self, other):
+		"""Сравнение каналов"""
+		return self.count_subscribers <= other.count_subscribers
 
 	def print_info(self):
 		"""Выводит в консоль информацию о канале."""
