@@ -33,20 +33,12 @@ class Video:
 {50 * '-'}'''
 
 
-class PLVideo:
+class PLVideo(Video):
 	"""Плейлист"""
 
 	def __init__(self, video_id, playlist_id) -> None:
-		self.video_id = video_id  # id видео
+		super().__init__(video_id)
 		self.playlist_id = playlist_id
-
-		self.video_response = YOUTUBE.videos().list(part='snippet,statistics', id=video_id).execute()  # получаем данные
-		self.json_data = json.dumps(self.video_response, indent=2, ensure_ascii=False)  # сохраняем в файл
-		self.title = json.loads(self.json_data)["items"][0]['snippet']['title']  # название видео
-		self.url = json.loads(self.json_data)["items"][0]['snippet']['thumbnails']['medium']['url']  # ссылка на видео
-		self.count_views = json.loads(self.json_data)["items"][0]['statistics']['viewCount']  # количество просмотров
-		self.count_likes = json.loads(self.json_data)["items"][0]['statistics']['likeCount']  # количество лайков
-		self.playlist_id = json.loads(self.json_data)["items"][0]['snippet']['categoryId']  # id плейлиста
 
 	def __str__(self):
 		return self.title
@@ -56,9 +48,9 @@ class PLVideo:
 		return f'''
 Класс : "{self.__class__.__name__}"
 Id видео : {self.video_id}
+Id плейлиста : {self.playlist_id}
 Название видео : {self.title}
 Ссылка на видео : {self.url}
-Id плейлиста : {self.playlist_id}
 Количество просмотров : {self.count_views}
 Количество лайков : {self.count_likes}
 {50 * '-'}'''
