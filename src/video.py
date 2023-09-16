@@ -11,13 +11,18 @@ class Video:
 	"""Видео"""
 
 	def __init__(self, video_id) -> None:
-		self.video_id = video_id  # id видео
-		self.video_response = YOUTUBE.videos().list(part='snippet,statistics', id=video_id).execute()  # получаем данные
-		self.json_data = json.dumps(self.video_response, indent=2, ensure_ascii=False)  # сохраняем в файл
-		self.title = json.loads(self.json_data)["items"][0]['snippet']['title']  # название видео
-		self.url = json.loads(self.json_data)["items"][0]['snippet']['thumbnails']['medium']['url']  # ссылка на видео
-		self.count_views = json.loads(self.json_data)["items"][0]['statistics']['viewCount']  # количество просмотров
-		self.count_likes = json.loads(self.json_data)["items"][0]['statistics']['likeCount']  # количество лайков
+		try:
+			self.video_id = video_id  # id видео
+			self.video_response = YOUTUBE.videos().list(part='snippet,statistics', id=video_id).execute()  # получаем данные
+			self.json_data = json.dumps(self.video_response, indent=2, ensure_ascii=False)  # сохраняем в файл
+			self.title = json.loads(self.json_data)["items"][0]['snippet']['title']  # название видео
+			self.url = json.loads(self.json_data)["items"][0]['snippet']['thumbnails']['medium']['url']  # ссылка на видео
+			self.count_views = json.loads(self.json_data)["items"][0]['statistics']['viewCount']  # количество просмотров
+			self.count_likes = json.loads(self.json_data)["items"][0]['statistics']['likeCount']  # количество лайков
+
+		except(IndexError, KeyError):
+			self.title = None
+			self.count_likes = None
 
 	def __str__(self):
 		return self.title
